@@ -1,0 +1,79 @@
+---
+- name: play with dict
+  hosts: localhost
+  gather_facts: false
+  vars:
+    numbers: [3,4,5,6,7,8]
+  tasks:
+    - name: remove value from list using jinja
+      debug:
+        msg: |
+          {% set _dummy = numbers.pop(1) %}{{numbers}}
+
+    - name: remove value from list using jinja type2 
+      debug:
+        msg: |
+          {% if numbers.pop(1) %}{% endif %}{{numbers}}
+   
+    - name: get updated list
+      set_fact:
+        updated_list: |
+          '{% set _dummy = numbers.pop(1) %}{{numbers}}'
+          
+    - debug: var=updated_list   
+          
+    - name: remove value from list using jinja  using value
+      debug:
+        msg: |
+          {% if numbers.remove(7) %}{% endif %}{{numbers}}
+          
+    
+    - name: print value using loop with jinja 
+      debug:
+        msg: {% for i in numbers %}{{i}}{% endfor %}
+        
+    - name: print value using loop with jinja 
+      debug:
+        msg: |
+          {% for i in numbers %}
+          {{i}}
+          {% endfor %}
+
+##we are using template test_numbers.j2 to print the value using for loop and save it into a text file 
+
+    - name: print value using loop with jinja with jinja template from external file test_numbers.j2
+      template:
+        src: test_numbers.j2
+        dest: get_loop_output.txt
+          {% for i in numbers %}{{i}}{% endfor %}
+          
+          
+    - name: Number sorting in list using jinja 
+      debug:
+        msg: |
+          {% if numbers.sort() %}{% endif %}{{ numbers }}
+
+    - name: Number sorting in list using jinja 
+      debug:
+        msg: |
+          {%set _dummy = numbers.sort() %}{{ numbers }}
+          
+    - name: Number sorting in list using jinja 
+      debug:
+        msg: |
+          {%set new_numbers = [] %}
+          {% for i in numbers  %}
+          {% set _ =  new_numbers.append(i|pow(3)) %}
+          {% endfor %}
+          {{ new_numbers }}
+
+    - name: Number sorting in list using jinja root
+      debug:
+        msg: |
+          {%set new_numbers = [] %}
+          {% for i in numbers  %}
+          {% set _ =  new_numbers.append(i|root) %}
+          {% endfor %}
+          {{ new_numbers }}
+...
+

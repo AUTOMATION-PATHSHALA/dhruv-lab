@@ -1,0 +1,57 @@
+---
+- name: play with dict
+  hosts: localhost
+  gather_facts: false
+  vars:
+    student_records: [{
+      "first": "Dhruv",
+      "last": "Kumar",
+      "mobile": "12345",
+      "ctc": "10L",
+      "address": {
+        "city": "Ayodhya",
+        "country": "India"
+      }
+    },
+      {
+       "first": "Raj",
+        "last": "Singh",
+        "mobile": "67890",
+        "ctc": "30L",
+        "address": {
+          "city": "Delhi",
+          "country": "India"
+        }
+      },
+      {
+        "first": "Mohan",
+        "last": "Shri",
+        "mobile": "112233",
+        "ctc": "15L",
+        "address": {
+          "city": "Banalore",
+          "country": "India"
+        }
+      }]
+  tasks:
+    - name: select and extract only city
+      debug:
+        msg: "{{ student_records | map(attribute='address') | map(attribute='city') | list }}"
+        
+    - name: select and extract city and country
+      debug:
+        msg: "{{ student_records | map(attribute='address') | list }}"        
+
+    - name: attribute joined with single line
+      debug:
+        msg: "{{ student_records | map(attribute='first') | join(',') | list }}"
+
+    - name: attribute joined with coma with single line
+      debug:
+        msg: "{{ student_records | map(attribute='first') | join(',') | list }}"
+
+    - name: attribute joined with coma with single line
+      debug:
+        msg: "{{ student_records | map(attribute='first') | join(',') | list }}"       
+
+...

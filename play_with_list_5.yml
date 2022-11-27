@@ -1,0 +1,115 @@
+---
+- name: play with list
+  hosts: localhost
+  gather_facts: false
+  vars:
+    ansible_student_list: []
+    ansible_student_list2: []
+    numbers: [1,2,3,4,5]
+    dup_numbers: [2,2,5,5,1,7,8,9]
+    student_names: ["Rai","Agg","Mis"]
+    student_records: [{"name":"Praveen","age":"43", "mobile":"123"},{"name":"Neeraj","age":"38", "mobile":"456"},{"name":"Raj","age":"35", "mobile":"456"}] 
+
+    
+  tasks:
+    - name: add ansible student name
+      set_fact:
+        ansible_student_list: "{{ ansible_student_list + [item] }}"
+      loop:
+        - "Rahul"
+        - "Dhurv"
+        - "check"
+        - "Value"
+        - "where"
+    - name: print ansible student name
+      debug:
+        var: ansible_student_list    
+  tasks:
+    - name: add ansible student name with conditaion
+      set_fact:
+        ansible_student_list2: "{{ ansible_student_list2 + [ item ] }}"
+      loop:
+        - "Praveen"
+        - "Dhurv"
+        - "check"
+        - "Value"
+        - "Where"
+      when: ansible_student_list2 | length<=3
+
+    - name: print ansible student name based on condition
+      debug:
+        var: ansible_student_list2
+
+    - name: get max value from the list
+      debug:
+        msg: "{{ numbers | max }}"
+   
+    - name: get min value
+      debug:
+        msg: "{{ numbers | min }}"
+      
+    - name: get power value from list
+      debug:
+        msg: "{{ item | pow(2) }}"
+      loop: "{{ numbers }}"
+
+    - name: get root value from list
+      debug:
+        msg: "{{ item | root }}"
+      loop: "{{ numbers }}"
+      
+    - name: get index value from list
+      debug:
+        msg: "{{ numbers[item] }}"
+      loop: [0,1,2]
+
+    - name: get uniqe value from list
+      debug:
+        msg: "{{ dup_numbers | unique }}"
+        
+    - name: get intersect of two list
+      debug:
+        msg: "{{ numbers | intersect(dup_numbers) }}"
+        
+    - name: remove value from list
+      debug:
+        msg: "{{ numbers | reject('search' , '3')|list }}"
+        
+    - name: remove Praveen from list
+      debug:
+        msg: "{{ ansible_student_list | reject('search' , 'Praveen')|list }}"
+        
+    - name: union from list
+      debug:
+        msg: "{{ dup_numbers | union(numbers) }}"
+        
+    - name: difference from list
+      debug:
+        msg: "{{ dup_numbers | difference(numbers) }}"
+        
+    - name: get merge two  list
+      debug:
+        msg: "{{ dup_numbers + numbers }}"
+
+    - name: get merge two  list
+      set_fact:
+        dup_numbers: "{{ dup_numbers + [item] }}"
+      loop: "{{ numbers }}"
+
+    - debug: var=dup_numbers
+    
+    # to conver the value in upper case using map module 
+    - name: Uppercase use with list values 
+      debug:
+        msg: "{{ student_names | map('upper')|list }}"
+        
+#dictionary use
+    - name: youngest student in the list
+      debug:
+        msg: "{{ student_records | map(attribute ='age')| list | min }}"
+
+    - name: sort number list
+      debug:
+        msg: "{{ numbers | sort() }}"
+                
+...

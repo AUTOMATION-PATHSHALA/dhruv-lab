@@ -1,0 +1,36 @@
+---
+- name: play with list
+  hosts: localhost
+  gather_facts: false
+  vars:
+    ansible_student_list: []
+    ansible_student_list2: []
+    
+  tasks:
+    - name: add ansible student name
+      set_fact:
+        ansible_student_list: "{{ ansible_student_list + [item] }}"
+      loop:
+        - "Rahul"
+        - "Dhurv"
+        - "check"
+        - "Value"
+        - "where"
+    - name: print ansible student name
+      debug:
+        var: ansible_student_list    
+  tasks:
+    - name: add ansible student name with conditaion
+      set_fact:
+        ansible_student_list2: "{{ ansible_student_list2 + [ item ] }}"
+      loop:
+        - "Praveen"
+        - "Dhurv"
+        - "check"
+        - "Value"
+        - "Where"
+      when: ansible_student_list2 | length<=3
+
+    - name: print ansible student name based on condition
+      debug:
+        var: ansible_student_list2
